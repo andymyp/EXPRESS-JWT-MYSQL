@@ -7,13 +7,25 @@ const database = require('./config/database');
 
 const app = express();
 
-// Middleware Connections
+//! Middlewares
 app.use(cors());
 app.use(express.json());
 
-// Routes
+//! Public Routes
+app.use('/status', (req, res) => {
+  res.status(200).json({ message: 'Server is running' });
+});
 
-// Connection
+app.use('/api/membership', require('./routes/membership'));
+
+//! Protected Routes
+
+//! Not Found
+app.all('*', (req, res) => {
+  res.status(404).json({ message: 'Endpoint was not found' });
+});
+
+//! Connection
 const APP_PORT = process.env.APP_PORT || 3000;
 
 database.connect((error) => {
